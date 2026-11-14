@@ -247,7 +247,6 @@ plugin-package: $(ARM_SO) $(SKIN)
 	$(PY) $(MV)/tools/release.py --so $(ARM_SO) --skin "$(SKIN_DIR)" --entry $(SURF_OUT)/pluginlist-entry.xml \
 		--version $(PLUGIN_VERSION) --repo Devko/PolyWerk --license MIT \
 		--about "PolyWerk wavetable synth (preview): 8 voices, 2 wavetable oscillators with 8x unison and subs, 30 built-in wavetables, 2 filters with comb and vowel, 2 LFOs, a 12-slot mod matrix, arpeggiator and sequencers, 205 presets, microtuning." \
-		--requires "root SSH (MockbaMod)" \
 		--user-data Wavetables --user-data Presets --user-data Tunings \
 		--user-data favorites.txt --user-data recent.txt --user-data preset_favorites.txt --user-data preset_recent.txt \
 		--previous-name "$(strip $(PREV_NAME))" -o dist

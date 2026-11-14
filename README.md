@@ -49,8 +49,9 @@ Effects are deliberately left out: use MPC's insert effects on the track.
 ## Requirements
 
 - An **Akai Force**. Other first-generation (32-bit ARM) MPC OS devices may work but are untested.
-- **Root SSH access** to the device (for example through MockbaMod). Stock MPC OS has no way to
-  install third-party plugins.
+- **MPC OS 3.10.1 or later** runs it as it comes: copy it into a `VST2 Plugins` folder (see below). On 3.9.1
+  and earlier, install it with the [plugin catalog](https://open-mpc.github.io/)'s Plugin Manager, or with the
+  package's `install.sh` over root SSH (for example through MockbaMod).
 - **MPC OS 3.x** for the touchscreen pages. Release builds need glibc 2.30, so MPC OS 2.x loads them
   too, but it doesn't draw third-party plugin pages yet.
 
