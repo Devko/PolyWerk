@@ -240,7 +240,7 @@ bench-device: $(ARM_SO) $(ARM_SO_STAGES) $(ARM_BENCH)
 
 # Release zip: plugin + skin + sd88me's installer (stops MPC, backs up and edits
 # MPC.settings, restarts MPC).
-PLUGIN_VERSION ?= 0.0.6
+PLUGIN_VERSION ?= 0.0.7
 plugin-package: $(ARM_SO) $(SKIN)
 	@# Everything shipped runs under BusyBox on the device: a CR in a script breaks it there.
 	@! grep -l "$$(printf '\r')" $(MV)/tools/release/* || { echo "error: CRLF in a shipped script"; exit 1; }
@@ -251,6 +251,9 @@ plugin-package: $(ARM_SO) $(SKIN)
 		--user-data Wavetables --user-data Presets --user-data Tunings \
 		--user-data favorites.txt --user-data recent.txt --user-data preset_favorites.txt --user-data preset_recent.txt \
 		--previous-name "$(strip $(PREV_NAME))" -o dist
+	@# MPC OS 3.10.1+: the same plugin folder in Akai's SDK layout (one folder, its plugin.json naming the .so as
+	@# polywerk-arm32.so), to copy by hand into a drive's "VST2 Plugins"; the catalog offers it as the 3.10.1 download.
+	$(PY) $(MV)/tools/sdk_zip.py dist/PolyWerk-$(PLUGIN_VERSION)-mpc-sdk.zip dist/PolyWerk-$(PLUGIN_VERSION)-mpc-armv7.zip
 
 # The package's installer against scratch folders: an upgrade from the old name moves the user's files over; and
 # release.py refuses an old name that isn't one. (Used as $(strip $(PREV_NAME)): make keeps the space before a comment.)
@@ -261,12 +264,16 @@ test-install: plugin-package
 
 # Install on a device: stops MPC, backs up + edits MPC.settings, restarts MPC. Save the MPC
 # project first. Usage: make plugin-install FORCE=root@<ip>
+# MPC OS 3.10.1 lists plugins only from a drive's "VST2 Plugins" folder, not /sdcard/Synths: there, add
+# INSTALL_TO="<drive>/VST2 Plugins" (the package's uninstall.sh takes the same -t "<drive>/VST2 Plugins").
+INSTALL_TO ?=
+INSTALL_T := $(if $(strip $(INSTALL_TO)), -t "$(strip $(INSTALL_TO))")
 PKG_TMP := /tmp/pfpkg
 plugin-install: plugin-package
 	rm -rf $(PKG_TMP) && mkdir -p $(PKG_TMP)
 	python3 -c 'import sys, zipfile; zipfile.ZipFile(sys.argv[1]).extractall(sys.argv[2])' dist/PolyWerk-$(PLUGIN_VERSION)-mpc-armv7.zip $(PKG_TMP)
 	tar -C $(PKG_TMP) -cf - PolyWerk-$(PLUGIN_VERSION) | ssh $(SSH_OPTS) $(FORCE) 'rm -rf /tmp/PolyWerk-$(PLUGIN_VERSION) && tar -C /tmp -xf -'
-	$(SSH) $(FORCE) 'sh /tmp/PolyWerk-$(PLUGIN_VERSION)/install.sh -y'
+	$(SSH) $(FORCE) 'sh /tmp/PolyWerk-$(PLUGIN_VERSION)/install.sh -y$(INSTALL_T)'
 
 $(BUILD):
 	mkdir -p $(BUILD)

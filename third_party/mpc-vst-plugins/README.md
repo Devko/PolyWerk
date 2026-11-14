@@ -1,7 +1,15 @@
 # Vendored: sd88me/mpc-vst-plugins (MIT)
 
 Copied from https://github.com/sd88me/mpc-vst-plugins at commit
-`670b20b9ab655140f324f9d093aa5c6f35929f73` (2026-10-04). License: see `LICENSE`
+`670b20b9ab655140f324f9d093aa5c6f35929f73` (2026-10-04). The release tools were re-copied from
+https://github.com/open-mpc/mpc-vst-plugins (the repo's new home) at commit
+`0dc17120cd7e952e95eeecdd820ac9e495a75ee9` (2026-11-12, the one its MPC OS 3.10.1 notice names) on 2026-11-14,
+taken as they are from EffectWerk's copy (which has the local patches below re-applied):
+`tools/release.py`, `tools/release/*`, `tools/catalog_check.py`, and the new `tools/sdk_zip.py`, `deps.py`,
+`skin_compat.py`, `skin_roles_2x.json`, `user_files.py` they need. They write the `plugin.json` MPC OS 3.10.1
+needs and the Akai SDK-format zip. The skin tools (`gen_vst.py`, `shadow_skin.py`, `studio*.py`, `skin_assets.py`,
+`shadow_art.c`, `params.py`) and `wrapper/` stay at 670b20b9: upstream's changes there are new features we don't use,
+and re-copying them would change the skin. License: see `LICENSE`
 (MIT, Copyright (c) 2026 sd88me); `tools/vendor/force-shadow/` carries its own MIT LICENSE.
 Unmodified apart from the marked local patches listed below.
 
@@ -32,8 +40,12 @@ re-copy.
    `surface/skin_polish.py`). With the browser renderer a meter still needs `strip=`.
 Re-apply them after re-copying upstream.
 
-## Local patch (SubWerk)
+## Local patches (SubWerk)
 
+6. `tools/release.py` (marked `SubWerk local patch 6`): the generated `INSTALL.md` gave every
+   `--user-data` entry a trailing slash, files too (`preset_favorites.txt/`); now only folders get one.
+   Came into PolyWerk with the 0dc17120 re-copy of `release.py` from EffectWerk (2026-11-14); PolyWerk's
+   earlier copy lacked it. Worth sending upstream.
 7. `tools/release.py` and `tools/release/install.sh` (marked `SubWerk local patch 7`): the -Werk
    rename. `release.py --previous-name <old name>` tells the installer the plugin's old folder
    (`<vendor> - VST - <old name>`); the installer carries the `--user-data` out of it into the new
@@ -47,3 +59,7 @@ Re-apply them after re-copying upstream.
    Expected side effect: `tools/catalog_check.py` regenerates `install.sh` from the template without
    `@PREV_SKIN@` and so warns that it differs from the current template.
    Ported from SubWerk on 2026-10-28.
+   Kept over upstream's own `release.py --retire` (2026-11-12): that removes the old folder only if its
+   `mpc-plugin.json` carries the new id, and the old release tools never put an `mpc-plugin.json` into the plugin
+   folder, so it would leave every PolyForce install behind. Both are in the files now; the Makefile uses
+   `--previous-name`. Re-applied by a three-way merge on the 0dc17120 re-copy (in EffectWerk; copied from there).

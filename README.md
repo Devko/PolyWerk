@@ -71,6 +71,13 @@ backs up and edits `MPC.settings`, and starts MPC again. Running it again upgrad
 keeps your own wavetables, presets, tunings and favorites. Then add **PolyWerk** to a track from
 MPC's instrument plugins.
 
+**MPC OS 3.10.1 and later** load plugins only from a folder named `VST2 Plugins` at the root of a drive (internal, SD
+card or USB), with Preferences → Enhancements → External Plugin Support on; `/sdcard/Synths` is no longer listed. No SSH
+needed: unzip `PolyWerk-<version>-mpc-sdk.zip` (from 0.0.7) and copy its `Devko - VST - PolyWerk` folder into
+`VST2 Plugins`, or use the [plugin catalog](https://open-mpc.github.io/)'s Plugin Manager. The installer above also works
+there: `install.sh -t "<drive>/VST2 Plugins"` (`make plugin-install INSTALL_TO=...`). Remove an older copy from
+`/sdcard/Synths` after moving your wavetables, presets, tunings and favorites: MPC may draw its skin instead.
+
 ## Building from source
 
 On Linux or WSL (developed on Ubuntu 24.04):
@@ -78,7 +85,7 @@ On Linux or WSL (developed on Ubuntu 24.04):
 ```sh
 make test            # the full test suite under ASan/UBSan
 make arm-plugin      # build/arm/polywerk.so for the device
-make plugin-package  # dist/PolyWerk-<version>-mpc-armv7.zip
+make plugin-package  # dist/PolyWerk-<version>-mpc-armv7.zip and -mpc-sdk.zip (MPC OS 3.10.1)
 ```
 
 Toolchain, every make target and the on-device bench are described in
@@ -100,7 +107,8 @@ Toolchain, every make target and the on-device bench are described in
 | Second performance pass — control rate, PGO, CPU guard | ✅ |
 | Third performance pass — output stage, 16-bit tables, frame cache | ✅ |
 | On a Force: pages, browser, wave view; device bench (11.1% at 8 × 8) | ✅ |
-| Release build in CI (glibc 2.31, PGO), passing the plugin catalog's check | ✅ |
+| Release build in CI (glibc 2.31, PGO), passing the [plugin catalog](https://github.com/open-mpc/mpc-vst-plugins)'s check | ✅ |
+| 0.0.7 — MPC OS 3.10.1: `plugin.json` in the folder, the SDK-format zip for `VST2 Plugins` | 🔜 |
 | Full on-device test round: Q-Links, project save and reload | 🔜 |
 | v0.1 — first release, parameter list frozen | ⬜ |
 
