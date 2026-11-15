@@ -73,7 +73,7 @@ keeps your own wavetables, presets, tunings and favorites. Then add **PolyWerk**
 MPC's instrument plugins.
 
 **MPC OS 3.10.1 and later** load plugins only from a folder named `VST2 Plugins` at the root of a drive (internal, SD
-card or USB), with Preferences → Enhancements → External Plugin Support on; `/sdcard/Synths` is no longer listed. No SSH
+card or USB), with Preferences → Enhancements (Beta) → Enable Enhancements and External Plugin Support on; `/sdcard/Synths` is no longer listed. No SSH
 needed: unzip `PolyWerk-<version>-mpc-sdk.zip` (from 0.0.7) and copy its `Devko - VST - PolyWerk` folder into
 `VST2 Plugins`, or use the [plugin catalog](https://open-mpc.github.io/)'s Plugin Manager. The installer above also works
 there: `install.sh -t "<drive>/VST2 Plugins"` (`make plugin-install INSTALL_TO=...`). Remove an older copy from
